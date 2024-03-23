@@ -1,15 +1,15 @@
 -- script that creates a trigger that decreases the quantity of an item after a new order
 -- Quantity in the table `items` can be negative
 
+DROP TRIGGER IF EXISTS reduce_quantity_order
 DELIMITER //
-
-CREATE TRIGGER decrease_quantity_after_order
+CREATE TRIGGER reduce_quantity_order
 AFTER INSERT ON orders
 FOR EACH ROW
-	BEGIN 
-		UPDATE items
+BEGIN 
+	UPDATE items
 		SET quantity = quantity - NEW.quantity_ordered
-		WHERE item_id = NEW.item_id;
+		WHERE name = NEW.item_name;
 END;
 //
 
