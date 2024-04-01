@@ -4,6 +4,8 @@ Writing strings to redis
 '''
 import redis
 import uuid
+import sys
+
 
 class Cache():
     def __init__(self, _redis=None) -> None:
@@ -16,3 +18,11 @@ class Cache():
         self._redis.set(key, data)
 
         return key
+    
+    def get_str(self, key: str) -> str:
+        '''A get method that takes a key and returns the string stored in the key'''
+        return self._redis.get(key)
+    
+    def get_int(self, key: int) -> int:
+        '''A get method that takes a key and returns the integer stored in the key'''
+        return self._redis.get(key)
