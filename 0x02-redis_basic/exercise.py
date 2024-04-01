@@ -14,3 +14,5 @@ class Cache():
         '''A store method that takes a string and returns a unique identifier'''
         key = str(uuid.uuid4())
         self._redis.set(key, data)
+
+        return key
