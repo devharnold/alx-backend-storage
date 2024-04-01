@@ -4,15 +4,17 @@ Writing strings to redis
 '''
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Any, Optional
 from redis import Cache
+from functools import wraps
 
 cache = Cache()
 def count_calls(method: Callable) -> Callable:
-    '''Decorator that takes a single method and returns a new method'''
-    def wrapper(self, *args, **kwargs):
-        '''Wrapper function'''
-        self._redis.incr('count_calls')
+    '''Decorator for cache class methods to track call count'''
+    @wraps(method)
+    def wrapper(self: Any, *args, **kwargs) -> str:
+        '''Wraps called method and increments call count'''
+        self._redis.incr('method.__qualname__')
         return method(self, *args, **kwargs)
     return wrapper
 
