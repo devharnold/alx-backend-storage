@@ -5,9 +5,19 @@ Writing strings to redis
 import redis
 import uuid
 from typing import Union, Callable
+from redis import Cache
 
+cache = Cache()
+def count_calls(method: Callable) -> Callable:
+    '''Decorator that takes a single method and returns a new method'''
+    def wrapper(self, *args, **kwargs):
+        '''Wrapper function'''
+        self._redis.incr('count_calls')
+        return method(self, *args, **kwargs)
+    return wrapper
 
 class Cache():
+    cache = Cache()
     def __init__(self, _redis=None) -> None:
         '''Constructor for __init__ method'''
         self._redis = redis.Redis(host='localhost', port=6379, db=0)
@@ -41,3 +51,4 @@ def get_str(self, key: str) -> Union[str, bytes, None]:
 def get_int(self, key: str) -> Union[int, bytes, None]:
     '''A get_int method that takes a key and returns the value as an integer'''
     return self.get(key, fn=int)
+
