@@ -18,6 +18,16 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+def call_history(method: Callable) -> Callable:
+    '''Decorator for cache class to track history'''
+    @wraps(method)
+    def wrapper(self: Any, *args) -> str:
+        '''Wraps called method and appends to history'''
+        self._redis.rpush(f'{method.__qualname__}:inputs', str(args))
+        output = method(self, *args)
+        self._redis.rpush(f'{method.__qualname__}:outputs', output)
+        return output
+    return wrapper
 class Cache():
     cache = Cache()
     def __init__(self, _redis=None) -> None:
