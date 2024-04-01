@@ -35,10 +35,13 @@ class Cache():
         self._redis = redis.Redis(host='localhost', port=6379, db=0)
         self._redis.flushdb()
 
-    def store(self, value: Union[str, bytes, int]) -> str:
-        '''A store method that takes a string and returns a unique identifier'''
-        key = self.generate_key()
-        self.redis_conn.set(key, value)
+    @call_history
+    @count_calls
+    def store(self, data: Union[str, bytes, int]) -> str:
+        '''Store data in redis'''
+        key = str(uuid.uuid4())
+        client = self._redis
+        client.set(key, data)
         return key
 
 #    def store(self, data: str) -> str:
