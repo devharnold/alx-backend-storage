@@ -13,9 +13,10 @@ class Cache():
         self._redis = redis.Redis(host='localhost', port=6379, db=0)
 
     def store(self, value: Union[str, bytes, int]) -> str:
-            key = self.generate_key()
-            self.redis_conn.set(key, value)
-            return key
+        '''A store method that takes a string and returns a unique identifier'''
+        key = self.generate_key()
+        self.redis_conn.set(key, value)
+        return key
 
 #    def store(self, data: str) -> str:
 #        '''A store method that takes a string and returns a unique identifier'''
@@ -25,6 +26,7 @@ class Cache():
 #        return key
     
 def get(self, key: str, fn: Callable = None) -> Union[str, bytes, int, None]:
+    '''A get method that takes a key and an optional function and returns the value'''
     value = self.reddis_conn.get(key)
     if value is None:
         return None
@@ -33,7 +35,9 @@ def get(self, key: str, fn: Callable = None) -> Union[str, bytes, int, None]:
     return value
 
 def get_str(self, key: str) -> Union[str, bytes, None]:
+    '''A get_str method that takes a key and returns the value as a string'''
     return self.get(key, fn=lambda x: x.decode('utf-8'))
 
 def get_int(self, key: str) -> Union[int, bytes, None]:
+    '''A get_int method that takes a key and returns the value as an integer'''
     return self.get(key, fn=int)
